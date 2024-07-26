@@ -20,7 +20,7 @@ def start(message):
     image_key = telebot.types.KeyboardButton(text='Сгенерировать изображение')
     help_key = telebot.types.KeyboardButton(text='Помощь')
     start_keyboard.add(text_key, image_key, help_key)
-    bot.send_message(message.chat.id, f'Привет, {message.chat.first_name}! Я искусственный интеллект NeuroBoy. Я могу общаться с Вами или генерировать изображения. Также меня можно добавить в групповой чат. Используйте кнопки или команды для взаимодействия с ботом.', reply_markup=start_keyboard)
+    bot.send_message(message.chat.id, f'Привет, {message.from_user.first_name}! Я искусственный интеллект NeuroBoy. Я могу общаться с Вами или генерировать изображения. Также меня можно добавить в групповой чат. Используйте кнопки или команды для взаимодействия с ботом.', reply_markup=start_keyboard)
     
     @bot.message_handler(content_types=['text'])
     def start_handler(message):
@@ -55,6 +55,14 @@ def chat(message):
                 case '/text':
                     text(message)
                 case '/image':
+                    image(message)
+                case '/start@neurochatboy_bot':
+                    start(message)
+                case '/help@neurochatboy_bot':
+                    help(message)
+                case '/text@neurochatboy_bot':
+                    text(message)
+                case '/image@neurochatboy_bot':
                     image(message)
                 case _:
                     chat_completion = client.chat.completions.create(model='gpt-4o-mini', 
@@ -103,23 +111,31 @@ def generate_image(message):
     if message.text != None:
         try:
             match message.text:
-                    case '/start':
-                        start(message)
-                    case '/help':
-                        help(message)
-                    case '/text':
-                        text(message)
-                    case '/image':
-                        image(message)
-                    case _:
-                        generated_image = client.images.generate(prompt=message.text, n=1, size='256x256', model='dall-e-2')
+                case '/start':
+                    start(message)
+                case '/help':
+                    help(message)
+                case '/text':
+                    text(message)
+                case '/image':
+                    image(message)
+                case '/start@neurochatboy_bot':
+                    start(message)
+                case '/help@neurochatboy_bot':
+                    help(message)
+                case '/text@neurochatboy_bot':
+                    text(message)
+                case '/image@neurochatboy_bot':
+                    image(message)
+                case _:
+                    generated_image = client.images.generate(prompt=message.text, n=1, size='256x256', model='dall-e-2')
 
-                        # обработка ответа LLM
-                        image_url = str(generated_image)
-                        image_url = image_url.split(", url='")[1]
-                        image_url = image_url.removesuffix("')])")
+                    # обработка ответа LLM
+                    image_url = str(generated_image)
+                    image_url = image_url.split(", url='")[1]
+                    image_url = image_url.removesuffix("')])")
 
-                        bot.send_photo(message.chat.id, image_url)
+                    bot.send_photo(message.chat.id, image_url)
 
         except telebot.apihelper.ApiTelegramException as e:
                 bot.send_message(message.chat.id, 'Напишите что-нибудь другое.')
