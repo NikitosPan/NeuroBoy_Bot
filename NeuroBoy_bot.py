@@ -29,12 +29,12 @@ def start(message):
         if message.text == 'Сгенерировать изображение':
             image(message)
         if message.text == 'Помощь':
-            help(message)
+            help_func(message)
 
 
 # создание команды /help
 @bot.message_handler(commands=['help'])
-def help(message):
+def help_func(message):
     bot.send_message(message.chat.id, 'Вот что я умею:\n\n/start - запустить бота;\n/help - помощь;\n/text - начать диалог с ботом;\n/image - сгенерировать изображение.\n\n❗ Для корректной работы бота в групповом чате, пожалуйста, наделите его правами администратора ❗\n\nОжидание ответа от бота может быть достаточно длительным. Наберитесь терпения!\n\nПо всем вопросам Вы можете писать сюда: @Nikitos_Pan', reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
@@ -51,7 +51,7 @@ def chat(message):
                 case '/start':
                     start(message)
                 case '/help':
-                    help(message)
+                    help_func(message)
                 case '/text':
                     text(message)
                 case '/image':
@@ -59,7 +59,7 @@ def chat(message):
                 case '/start@neurochatboy_bot':
                     start(message)
                 case '/help@neurochatboy_bot':
-                    help(message)
+                    help_func(message)
                 case '/text@neurochatboy_bot':
                     text(message)
                 case '/image@neurochatboy_bot':
@@ -114,7 +114,7 @@ def generate_image(message):
                 case '/start':
                     start(message)
                 case '/help':
-                    help(message)
+                    help_func(message)
                 case '/text':
                     text(message)
                 case '/image':
@@ -122,7 +122,7 @@ def generate_image(message):
                 case '/start@neurochatboy_bot':
                     start(message)
                 case '/help@neurochatboy_bot':
-                    help(message)
+                    help_func(message)
                 case '/text@neurochatboy_bot':
                     text(message)
                 case '/image@neurochatboy_bot':
