@@ -80,7 +80,6 @@ def chat(message):
                         llm_answer = llm_answer.split('message=ChatCompletionMessage(content="')[1]
                         llm_answer = llm_answer.split("""", role='assistant'""")[0]
 
-                    llm_answer = llm_answer.replace('**', '')
                     llm_answer = llm_answer.replace('\u005cn', '\n')
                     
                     bot.send_message(message.chat.id, llm_answer)
