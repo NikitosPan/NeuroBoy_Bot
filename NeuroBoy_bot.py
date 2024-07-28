@@ -75,7 +75,7 @@ def chat(message):
                     history.append({'role': 'user', 'content': message.text})
                     chat_completion = client.chat.completions.create(model='gpt-4o-mini', 
                                                                      messages=history,
-                                                                     max_tokens=500)
+                                                                     max_tokens=750)
                     
                     # обработка ответа LLM
                     llm_answer = str(chat_completion)
