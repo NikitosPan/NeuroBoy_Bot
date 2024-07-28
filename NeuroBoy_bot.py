@@ -12,6 +12,10 @@ client = openai.OpenAI(api_key=proxyapi_key,
                        base_url='https://api.proxyapi.ru/openai/v1')
 
 
+# создание переменной, содержащей историю чата
+history = []
+
+
 # создание команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -41,10 +45,13 @@ def help_func(message):
 # создание команды /text через две функции: text() и chat()
 @bot.message_handler(commands=['text'])
 def text(message):
+    global history
+    history = []
     bot.send_message(message.chat.id, 'Чем я могу Вам помочь?', reply_markup=telebot.types.ReplyKeyboardRemove())
     bot.register_next_step_handler(message, chat)
 
 def chat(message):
+    global history
     if message.text != None:
         try:
             match message.text:
@@ -65,8 +72,9 @@ def chat(message):
                 case '/image@neurochatboy_bot':
                     image(message)
                 case _:
+                    history.append({'role': 'user', 'content': message.text})
                     chat_completion = client.chat.completions.create(model='gpt-4o-mini', 
-                                                                     messages=[{'role': 'user', 'content': message.text}],
+                                                                     messages=history,
                                                                      max_tokens=500)
                     
                     # обработка ответа LLM
@@ -81,6 +89,8 @@ def chat(message):
                         llm_answer = llm_answer.split("""", role='assistant'""")[0]
 
                     llm_answer = llm_answer.replace('\u005cn', '\n')
+
+                    history.append({'role': 'assistant', 'content': llm_answer})
                     
                     bot.send_message(message.chat.id, llm_answer)
                     bot.register_next_step_handler(message, chat)
